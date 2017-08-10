@@ -11,6 +11,9 @@ public class Car {
     private String size;
     private String speed;
 
+    public Car() {
+    }
+
     public Car(String carNo, String size, String speed) {
         this.carNo = carNo;
         this.size = size;

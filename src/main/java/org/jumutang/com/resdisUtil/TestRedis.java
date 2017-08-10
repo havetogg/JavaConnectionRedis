@@ -1,11 +1,11 @@
 package org.jumutang.com.resdisUtil;
 
+import com.alibaba.fastjson.JSON;
+import org.jumutang.com.entity.Car;
 import redis.clients.jedis.Jedis;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @Auther: Tinny.liang
@@ -133,7 +133,31 @@ public class TestRedis {
     public static void main(String[] args) {
         /*RedisUtil.getJedis().set("newname", "中文测试");
         System.out.println(RedisUtil.getJedis().get("newname"));*/
-        TestRedis testRedis = new TestRedis();
-        testRedis.testList();
+        /*TestRedis testRedis = new TestRedis();
+        //testRedis.testList();
+        testRedis.testMap();*/
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = formatter.format(date);
+        Map<String,String> redisMap = new HashMap<>();
+        redisMap.put("sinopecGameCt_prizeTime",dateString);
+        List<Car> cars = new ArrayList<>();
+        cars.add(new Car("001","500","50"));
+        cars.add(new Car("002","400","60"));
+        cars.add(new Car("003","300","80"));
+        redisMap.put("sinopecGameCt_prizeList",JSON.toJSONString(cars));
+        jedis.hmset("sinopecGameCt",redisMap);
+        List<String> rsmap = jedis.hmget("sinopecGameCt", "sinopecGameCt_prizeTime", "sinopecGameCt_prizeList");
+        System.out.println(rsmap);
+
+       /* RedisUtil.getJedis().set("sinopecGameCt_prizeList", JSON.toJSONString(cars));
+        RedisUtil.getJedis().del("sinopecGameCt_prizeList");
+        String carsStr = RedisUtil.getJedis().get("sinopecGameCt_prizeList");
+
+        List<Car> newCar = JSON.parseArray(carsStr,Car.class);
+        for(Car car:newCar){
+            System.out.println(car.getCarNo()+" "+car.getSize());
+        }
+        System.out.println(carsStr);*/
     }
 }
